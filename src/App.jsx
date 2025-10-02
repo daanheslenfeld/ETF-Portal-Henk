@@ -1,20 +1,80 @@
-import { useState } from "react";
-import InvestmentAmountStep from "./steps/InvestmentAmountStep.jsx";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Dashboard from "./pages/Dashboard";
+import Portfolio from "./pages/Portfolio";
+import ETFSelection from "./pages/ETFSelection";
+import Tracking from "./pages/Tracking";
+import Layout from "./components/Layout";
+
+// Protected Route Component
+function ProtectedRoute({ children }) {
+  const user = localStorage.getItem("user");
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+  return <Layout>{children}</Layout>;
+}
+
+// Public Route Component (redirects to dashboard if already logged in)
+function PublicRoute({ children }) {
+  const user = localStorage.getItem("user");
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return children;
+}
 
 export default function App() {
-  const [step, setStep] = useState(6);
   return (
-    <InvestmentAmountStep
-      currentStep={step}
-      totalSteps={8}
-      initialAmount={25000}
-      minAmount={1000}
-      presets={[5000, 10000, 25000, 50000]}
-      onBack={() => setStep((s) => Math.max(1, s - 1))}
-      onNext={(amount) => {
-        console.log("Selected amount:", amount);
-        setStep((s) => Math.min(8, s + 1));
-      }}
-    />
+    <BrowserRouter>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+
+        {/* Protected Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/portfolio"
+          element={
+            <ProtectedRoute>
+              <Portfolio />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/etf-selection"
+          element={
+            <ProtectedRoute>
+              <ETFSelection />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tracking"
+          element={
+            <ProtectedRoute>
+              <Tracking />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Catch all - redirect to login */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

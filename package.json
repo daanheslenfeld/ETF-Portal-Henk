@@ -11,8 +11,10 @@
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.0",
     "framer-motion": "^11.0.0",
-    "lucide-react": "^0.453.0"
+    "lucide-react": "^0.453.0",
+    "recharts": "^2.10.0"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",
