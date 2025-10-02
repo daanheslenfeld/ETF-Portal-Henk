@@ -1,80 +1,23 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./pages/Login";
-import Dashboard from "./pages/Dashboard";
-import Portfolio from "./pages/Portfolio";
-import ETFSelection from "./pages/ETFSelection";
-import Tracking from "./pages/Tracking";
-import Layout from "./components/Layout";
-
-// Protected Route Component
-function ProtectedRoute({ children }) {
-  const user = localStorage.getItem("user");
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
-  return <Layout>{children}</Layout>;
-}
-
-// Public Route Component (redirects to dashboard if already logged in)
-function PublicRoute({ children }) {
-  const user = localStorage.getItem("user");
-  if (user) {
-    return <Navigate to="/dashboard" replace />;
-  }
-  return children;
-}
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import NewLanding from "./pages/NewLanding";
+import NewAuth from "./pages/NewAuth";
+import NewETFDatabase from "./pages/NewETFDatabase";
+import NewPurchase from "./pages/NewPurchase";
+import NewDashboard from "./pages/NewDashboard";
+import ETFModal from "./components/ETFModal";
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
-        <Route
-          path="/"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-
-        {/* Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/portfolio"
-          element={
-            <ProtectedRoute>
-              <Portfolio />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/etf-selection"
-          element={
-            <ProtectedRoute>
-              <ETFSelection />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/tracking"
-          element={
-            <ProtectedRoute>
-              <Tracking />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Catch all - redirect to login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/" element={<NewLanding />} />
+        <Route path="/login" element={<NewAuth />} />
+        <Route path="/register" element={<NewAuth />} />
+        <Route path="/etf-database" element={<NewETFDatabase />} />
+        <Route path="/purchase" element={<NewPurchase />} />
+        <Route path="/dashboard" element={<NewDashboard />} />
       </Routes>
+      <ETFModal />
     </BrowserRouter>
   );
 }
